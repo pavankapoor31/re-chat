@@ -6,7 +6,7 @@ import { ToastContainer } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
-import Write from './components/write.js';
+import MessageWrapper from './pages/MessageWrapper/MessageWrapper.js';
 import SignIn from './pages/SignIn/SignIn.js';
 import SignUp from './pages/SignUp/SignUp.js';
 import Welcome from './pages/Welcome/Welcome.js';
@@ -31,7 +31,7 @@ function App() {
                         <Route path="/signup" element={<SignUp/>}/>
                         <Route path="/signin" element={<SignIn/>}/>
                         <Route path="/welcome" element={<Welcome/>}/>
-                        <Route path="/chat/:id" element={<Write/>}/>
+                        <Route path="/chat/:id" element={<MessageWrapper/>}/>
                     </>
                 }
             </Routes>
