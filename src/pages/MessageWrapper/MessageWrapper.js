@@ -97,8 +97,8 @@ const MessageWrapper = () => {
             </div>
             <div className="d-flex">
                 <TextField className='flex-1 w-100 px-1' onKeyDown={keyPress} value={messageInput} onChange={(e) => { setMessageInput(e.target.value) }} />
-                <Button onClick={handleSendMessage} variant="outlined" endIcon={<SendIcon />} >Send</Button>
-                
+                <Button onClick={handleSendMessage} variant="contained" ><SendIcon/></Button>
+
             </div>
         </div>
     )
