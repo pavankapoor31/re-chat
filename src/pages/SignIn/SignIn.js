@@ -36,7 +36,7 @@ export default function SignIn() {
             position: 'bottom-right'
           })
           console.log(user)
-          navigate('/');
+          navigate('/welcome');
           // ...
         })
         .catch((error) => {

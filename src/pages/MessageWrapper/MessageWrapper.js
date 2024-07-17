@@ -23,6 +23,7 @@ const MessageWrapper = () => {
             let snapshotVal = snapshot.val();
             let messagesList = [];
             console.log(snapshotVal, 'snapshotVal')
+            if(snapshotVal.hasOwnProperty('messages'))
             Object.entries(snapshotVal.messages).forEach(
                 ([key, val]) => {
                     messagesList.push({

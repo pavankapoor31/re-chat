@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import firebase from 'firebase/compat/app';
 import { push, ref, set } from 'firebase/database';
 import { db } from '../../server/firebaseConfig';
+import { toast } from 'react-toastify';
 const Welcome = () => {
     const navigate = useNavigate();
     const { currentUser, loading } = useFirebaseAuth();
@@ -23,6 +24,8 @@ const Welcome = () => {
             // Add any additional initial data for the room
           }).then(() => {
             // Navigate to the new room URL
+            navigator.clipboard.writeText(`/chat/${roomId}`);
+            toast.success("Copied chat room link to clipboard")
             navigate(`/chat/${roomId}`);
           }).catch((error) => {
             console.error("Error creating room: ", error);
@@ -36,6 +39,7 @@ const Welcome = () => {
       };
       
     const navigateToChat = () => {
+        
         createLinkId(currentUser)
         
     };

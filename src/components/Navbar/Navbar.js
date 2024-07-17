@@ -4,9 +4,11 @@ import signoutIcon from './../../assets/images/signout-icon.png';
 import { Tooltip } from '@mui/material';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../server/firebaseConfig';
+import { ref } from 'firebase/database';
 const Navbar = () => {
     const {loading,currentUser} = useFirebaseAuth();
     const handleSignOut = ()=>{
+        // const dbRef = ref(db,'links')
         signOut(auth)
     }
     return (

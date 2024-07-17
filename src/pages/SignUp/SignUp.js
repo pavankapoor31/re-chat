@@ -43,7 +43,7 @@ export default function SignUp() {
                     lastName: userData.lastName,
                     email: userData.email,
                 });
-                return navigate('/');
+                return navigate('/welcome');
             }
     })
   };
