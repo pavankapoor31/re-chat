@@ -9,10 +9,11 @@ import { toast } from 'react-toastify';
 const Welcome = () => {
     const navigate = useNavigate();
     const { currentUser, loading } = useFirebaseAuth();
-
     useEffect(() => {
         console.log(currentUser, 'currentUser');
     }, [currentUser]);
+    toast.info("Copied chat room link to clipboard. You can share this link to chat with others!",{autoClose: 4000, icon:false})
+
     const createLinkId = async (user) => {
         const chatroomsRef = ref(db, 'chatrooms'); // Reference to the 'chatrooms' node in the database
         // Push a new room under 'chatrooms' to generate a unique room ID
@@ -25,7 +26,7 @@ const Welcome = () => {
           }).then(() => {
             // Navigate to the new room URL
             navigator.clipboard.writeText(`/chat/${roomId}`);
-            toast.success("Copied chat room link to clipboard")
+            toast.success("Copied chat room link to clipboard. You can share this link to chat with others!",{autoClose: 4000, showIcon:false})
             navigate(`/chat/${roomId}`);
           }).catch((error) => {
             console.error("Error creating room: ", error);
