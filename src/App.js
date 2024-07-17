@@ -15,7 +15,7 @@ import Navbar from './components/Navbar/Navbar.js';
 function App() {
     const [user] = useAuthState(auth);
   return (
-    <div className="">
+    <div className="App">
         <Navbar/>
         <Router>
             <Routes>

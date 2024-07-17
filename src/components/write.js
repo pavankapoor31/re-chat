@@ -5,11 +5,13 @@ import MessageBox from './MessageBox/MessageBox'
 import { useParams } from 'react-router-dom'
 import { doc, setDoc } from 'firebase/firestore'
 import useFirebaseAuth from '../hooks/useFirebaseAuth'
+import { Button, TextField } from '@mui/material'
 const Write = () => {
     const { loading, currentUser } = useFirebaseAuth();
     const chatRoomData = useParams();
     const chatRoomId = chatRoomData.id;
     const [messages, setMessages] = useState([]);
+    const [messageInput, setMessageInput] = useState([]);
     const fetchData = async () => {
         console.log(chatRoomId, 'chatRoomIdchatRoomIdchatRoomId')
         const dbRef = ref(db, `chatrooms/${chatRoomId}`);
@@ -17,49 +19,53 @@ const Write = () => {
         if (snapshot.exists()) {
             let snapshotVal = snapshot.val();
             let messagesList = [];
-            console.log(snapshotVal,'snapshotVal')
-             Object.entries(snapshotVal.messages).forEach(
-                ([key,val])=>{
-                    messagesList.push( {
-                        id:key,
-                        val
+            console.log(snapshotVal, 'snapshotVal')
+            Object.entries(snapshotVal.messages).forEach(
+                ([key, val]) => {
+                    messagesList.push({
+                        id: key,
+                        ...val
                     })
                 }
             )
-            console.log(messagesList,'messagesList')
+            setMessages(messagesList)
         } else {
             console.log(snapshot, 'snapppp2')
         }
     }
-    const addMessage = async (message) => {
+    const handleSendMessage = async () => {
         const payload = {
             createdBy: currentUser.uid,
             messageTime: serverTimestamp(),
-            messageText: "new message",
+            messageText: messageInput,
             createdByName: `${currentUser.firstName} ${currentUser.lastName}`
         }
         const dbRef = ref(db, `chatrooms/${chatRoomId}/messages`);
         const newDbRef = push(dbRef);
         set(newDbRef, payload).then(
-            (res) => {
-                console.log('success', res)
+            () => {
+                console.log('success')
             }
         );
+        setMessageInput("");
     }
     useEffect(() => {
         fetchData()
     }, [])
     return (
-        <div>
+        <div className='bg-light p-1 mt-2 mx-auto' style={{ width: "80%" }}>
             {
                 messages.map(
                     (message, index) => {
-                        return <MessageBox key={index} userName={message.createdByName} messageTime={message.messageTime} userMessage={message.messageText} />
+                        return <MessageBox key={index} userName={message.createdByName} messageTime={message.messageTime} userMessage={message.messageText} isSender={currentUser.uid === message.createdBy} />
                     }
                 )
             }
 
-            <button onClick={() => { addMessage("message") }}>add data</button>
+            <div className="d-flex">
+                <TextField className='flex-1 w-100 px-1' value={messageInput} onChange={(e) => { setMessageInput(e.target.value) }} />
+                <Button className='btn btn-primary' onClick={handleSendMessage}>Send</Button>
+            </div>
         </div>
     )
 }
