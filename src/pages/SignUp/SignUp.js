@@ -36,7 +36,7 @@ export default function SignUp() {
         const user = userCredential.user;
             if (user) {
                 toast.success("Successfully signed up!", {
-                    position: 'top-right'
+                    position: 'bottom-right'
                 })
                 set(ref(db, 'users/' + user.uid), {
                     firstName: userData.firstName,

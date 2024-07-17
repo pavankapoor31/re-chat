@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth, db } from "./../server/firebase";
+import { auth,db } from "../server/firebaseConfig";
 import { child, get, ref } from "firebase/database";
 
 const useFirebaseAuth = () => {

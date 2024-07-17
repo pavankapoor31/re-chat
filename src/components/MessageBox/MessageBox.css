@@ -1,0 +1,35 @@
+.message {
+    display: flex;
+    align-items: flex-start;
+    margin: 1rem 2rem;
+  }
+  
+  .message__user-profile--image {
+    border-radius: 50%;
+  }
+  
+  .message__user-details {
+    margin-left: 0.5rem;
+  }
+  
+  .message__user-details__row {
+    margin-top: 0.3rem;
+  }
+  
+  .message__user-details__time {
+    margin-left: 0.3rem;
+    color: gray;
+    font-size: 0.75rem;
+  }
+  
+  .message__liker {
+    cursor: pointer;
+  }
+  
+  .message__body {
+    text-align: left;
+    background: #fff;
+    border-radius: 0 1rem 1rem 1rem;
+    padding: 1rem;
+  }
+  

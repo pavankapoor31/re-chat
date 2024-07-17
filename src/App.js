@@ -1,16 +1,22 @@
-import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
+import { useAuthState } from "react-firebase-hooks/auth";
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+
 import 'react-toastify/dist/ReactToastify.css';
-import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import './App.css';
 import Write from './components/write.js';
 import SignIn from './pages/SignIn/SignIn.js';
 import SignUp from './pages/SignUp/SignUp.js';
-import { useAuthState } from "react-firebase-hooks/auth";
+import Welcome from './pages/Welcome/Welcome.js';
 import { auth } from './server/firebaseConfig.js';
-import { ToastContainer } from 'react-toastify';
+import Navbar from './components/Navbar/Navbar.js';
 function App() {
     const [user] = useAuthState(auth);
   return (
     <div className="">
+        <Navbar/>
         <Router>
             <Routes>
                 {
@@ -24,7 +30,8 @@ function App() {
                         
                         <Route path="/signup" element={<SignUp/>}/>
                         <Route path="/signin" element={<SignIn/>}/>
-                        <Route path="/chats:id" element={<Write/>}/>
+                        <Route path="/welcome" element={<Welcome/>}/>
+                        <Route path="/chat/:id" element={<Write/>}/>
                     </>
                 }
             </Routes>

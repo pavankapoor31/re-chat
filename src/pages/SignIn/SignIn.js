@@ -32,8 +32,8 @@ export default function SignIn() {
         .then((userCredential) => {
           // Signed in 
           const user = userCredential.user;
-          toast.success("Successfully loged in!", {
-            position: 'top-right'
+          toast.success("Successfully logged in!", {
+            position: 'bottom-right'
           })
           console.log(user)
           navigate('/');
@@ -43,7 +43,7 @@ export default function SignIn() {
           const errorCode = error.code;
           const errorMessage = error.message;
           toast.error("Invalid email or password", {
-            position: 'bottom-left'
+            position: 'bottom-right'
           })
           console.log("Error: ", errorCode +" "+errorMessage)
         });
