@@ -8,6 +8,7 @@ import { get, push, ref, remove, set, update } from 'firebase/database';
 const Navbar = () => {
     const {loading,currentUser} = useFirebaseAuth();
     const handleSignOut = async()=>{
+        // handles signout from firebase
         const dbRef = ref(db,'chatrooms')
         const snapshot = await get(dbRef);
         const snapshotValues = snapshot.val();
@@ -22,7 +23,7 @@ const Navbar = () => {
     }
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light px-2" >
-            <a className="navbar-brand" href="#">Re-chat</a>
+            <a className="navbar-brand" href="/welcome">Re-chat</a>
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span className="navbar-toggler-icon"></span>
             </button>
@@ -43,7 +44,7 @@ const Navbar = () => {
                <div className="d-flex align-items-center">
                <div>{currentUser.firstName} {currentUser.lastName} </div>
                 <Tooltip  title="Sign out" arrow placement='bottom'>
-                 <div className='px-2 pb-1 cursor-pointer' onClick={handleSignOut}><img src={signoutIcon} alt="Sign out icon" width={"18px"} height={"18px"} /></div>
+                 <div  type="button" className='px-2 pb-1 cursor-pointer' onClick={handleSignOut}><img src={signoutIcon} alt="Sign out icon" width={"18px"} height={"18px"} /></div>
                 </Tooltip>
                </div>
             </div>

@@ -1,12 +1,11 @@
+import SendIcon from '@mui/icons-material/Send'
+import { Button, Skeleton, TextField, Typography } from '@mui/material'
+import { get, onValue, push, ref, serverTimestamp, set } from 'firebase/database'
 import React, { useEffect, useRef, useState } from 'react'
-import app, { db } from '../../server/firebaseConfig'
-import { getDatabase, ref, set, push, get, serverTimestamp, onValue } from 'firebase/database'
-import MessageBox from '../../components/MessageBox/MessageBox'
 import { useNavigate, useParams } from 'react-router-dom'
-import { doc, setDoc } from 'firebase/firestore'
+import MessageBox from '../../components/MessageBox/MessageBox'
 import useFirebaseAuth from '../../hooks/useFirebaseAuth'
-import { Button, TextField } from '@mui/material'
-import SendIcon from '@mui/icons-material/Send';
+import { db } from '../../server/firebaseConfig'
 const MessageWrapper = () => {
     const { loading, currentUser } = useFirebaseAuth();
     const chatRoomData = useParams();
@@ -21,21 +20,23 @@ const MessageWrapper = () => {
         if (snapshot.exists()) {
             let snapshotVal = snapshot.val();
             let messagesList = [];
-            if(snapshotVal.hasOwnProperty('messages'))
-            Object.entries(snapshotVal.messages).forEach(
-                ([key, val]) => {
-                    messagesList.push({
-                        id: key,
-                        ...val
-                    })
-                }
-            )
+            if (snapshotVal.hasOwnProperty('messages'))
+                Object.entries(snapshotVal.messages).forEach(
+                    ([key, val]) => {
+                        messagesList.push({
+                            id: key,
+                            ...val
+                        })
+                    }
+                )
             setMessages(messagesList)
         } else {
             navigate('/welcome');
         }
     }
     const handleSendMessage = async () => {
+        // Avoid empty spaces. 
+        if(messageInput.trim().length===0) return;
         const payload = {
             createdBy: currentUser.uid,
             messageTime: serverTimestamp(),
@@ -45,19 +46,21 @@ const MessageWrapper = () => {
         const dbRef = ref(db, `chatrooms/${chatRoomId}/messages`);
         const newDbRef = push(dbRef);
         set(newDbRef, payload).catch(
-            (err)=>{
+            (err) => {
                 console.error(err)
             }
         )
         setMessageInput("");
     }
     const keyPress = (e) => {
-        if (e.keyCode == 13) {
+        // Check for enter pressed to send message. 
+        if (e.keyCode === 13) {
+            if(e.shiftKey === true)return;
             handleSendMessage()
         }
     }
     useEffect(() => {
-        if(!chatRoomId) return;
+        if (!chatRoomId) return;
         fetchData()
     }, [chatRoomId])
     useEffect(() => {
@@ -84,7 +87,7 @@ const MessageWrapper = () => {
 
 
     useEffect(() => {
-        if(!chatRoomId) return;
+        if (!chatRoomId) return;
         const dbRef = ref(db, `chatrooms/${chatRoomId}`);
 
         // Listen for real-time updates
@@ -92,8 +95,8 @@ const MessageWrapper = () => {
             const snapshotExists = snapshot.exists();
             if (snapshotExists) {
                 const snapshotValues = snapshot.val();
-                if(snapshotValues.hasOwnProperty("disabled") && snapshotValues["disabled"]){
-                    navigate('/welcome');navigate('/welcome');
+                if (snapshotValues.hasOwnProperty("disabled") && snapshotValues["disabled"]) {
+                    navigate('/welcome');
                 }
             } else {
                 navigate('/welcome');
@@ -102,25 +105,26 @@ const MessageWrapper = () => {
 
         // Cleanup listener on unmount
         return () => unsubscribe();
-    }, [chatRoomId]);
+    }, [chatRoomId,navigate]);
     return (
         <div className='mx-auto' style={{ width: "80%" }}>
             <div className='bg-light p-1 mt-2 mx-auto overflow-auto' style={{ height: '80vh' }}>
                 {
-                    messages.map(
+                    !loading ? messages.map(
                         (message, index) => {
                             return <MessageBox key={index} userName={message.createdByName} messageTime={message.messageTime} userMessage={message.messageText} isSender={currentUser?.uid === message.createdBy} />
                         }
-                    )
+                    ) :
+                        <Skeleton variant="rectangular" style={{ borderRadius: '25px' }} width={210} height={60} />
                 }
                 <div ref={scrollRef}> </div>
 
             </div>
-            <div className="d-flex">
-                <TextField className='flex-1 w-100 px-1' onKeyDown={keyPress} value={messageInput} onChange={(e) => { setMessageInput(e.target.value) }} />
-                <Button onClick={handleSendMessage} variant="contained" ><SendIcon/></Button>
-
-            </div>
+            {!loading ? <div className="d-flex">
+                <TextField className='flex-1 w-100 px-1' onKeyDown={keyPress} value={messageInput} onChange={(e) => { setMessageInput(e.target.value) }} placeholder='Type new message' />
+                <Button onClick={handleSendMessage} variant="contained" ><SendIcon /></Button>
+            </div> : <Typography variant="h1">{loading ? <Skeleton /> : 'h1'}</Typography>
+            }
         </div>
     )
 }
