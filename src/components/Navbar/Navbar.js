@@ -4,22 +4,20 @@ import signoutIcon from './../../assets/images/signout-icon.png';
 import { Tooltip } from '@mui/material';
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../../server/firebaseConfig';
-import { get, ref, remove } from 'firebase/database';
+import { get, push, ref, remove, set, update } from 'firebase/database';
 const Navbar = () => {
     const {loading,currentUser} = useFirebaseAuth();
     const handleSignOut = async()=>{
         const dbRef = ref(db,'chatrooms')
-        console.log(dbRef,'dbRef')
         const snapshot = await get(dbRef);
-        console.log(snapshot.exists(),'snapshot')
         const snapshotValues = snapshot.val();
         Object.entries(snapshotValues).forEach(([key,value])=>{
             if(value.createdBy===currentUser.uid){
-                    const deleteRef = ref(db, `chatrooms/${key}`);
-                    remove(deleteRef);
+                    const updateRef = ref(db, `chatrooms/${key}`);
+                    update(updateRef,{"disabled":true});
             }
         })
-        // signOut(auth);
+        signOut(auth);
 
     }
     return (

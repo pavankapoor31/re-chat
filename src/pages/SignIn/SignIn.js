@@ -24,7 +24,6 @@ export default function SignIn() {
 
     const handleSignIn = (auth,email,password) => {
         if(!isValidEmail(email)){
-          console.log("wrong email")
           return;
         }
     
@@ -35,7 +34,6 @@ export default function SignIn() {
           toast.success("Successfully logged in!", {
             position: 'bottom-right'
           })
-          console.log(user)
           navigate('/welcome');
           // ...
         })
@@ -45,7 +43,6 @@ export default function SignIn() {
           toast.error("Invalid email or password", {
             position: 'bottom-right'
           })
-          console.log("Error: ", errorCode +" "+errorMessage)
         });
       }
 

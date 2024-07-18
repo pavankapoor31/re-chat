@@ -21,7 +21,6 @@ const MessageWrapper = () => {
         if (snapshot.exists()) {
             let snapshotVal = snapshot.val();
             let messagesList = [];
-            console.log(snapshotVal, 'snapshotVal')
             if(snapshotVal.hasOwnProperty('messages'))
             Object.entries(snapshotVal.messages).forEach(
                 ([key, val]) => {
@@ -45,15 +44,14 @@ const MessageWrapper = () => {
         }
         const dbRef = ref(db, `chatrooms/${chatRoomId}/messages`);
         const newDbRef = push(dbRef);
-        set(newDbRef, payload).then(
-            () => {
-                console.log('success')
+        set(newDbRef, payload).catch(
+            (err)=>{
+                console.error(err)
             }
-        );
+        )
         setMessageInput("");
     }
     const keyPress = (e) => {
-        console.log(e.keyCode, 'keycodeeee')
         if (e.keyCode == 13) {
             handleSendMessage()
         }
@@ -91,8 +89,12 @@ const MessageWrapper = () => {
 
         // Listen for real-time updates
         const unsubscribe = onValue(dbRef, (snapshot) => {
-            const snapshotVal = snapshot.exists();
-            if (snapshotVal) {
+            const snapshotExists = snapshot.exists();
+            if (snapshotExists) {
+                const snapshotValues = snapshot.val();
+                if(snapshotValues.hasOwnProperty("disabled") && snapshotValues["disabled"]){
+                    navigate('/welcome');navigate('/welcome');
+                }
             } else {
                 navigate('/welcome');
             }
