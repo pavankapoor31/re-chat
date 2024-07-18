@@ -20,6 +20,7 @@ function App() {
                     {
                         //We can add conditional routes here. 
                         <>
+                            <Route path="/" element={<Welcome />} />
                             <Route path="/signup" element={<Register />} />
                             <Route path="/signin" element={<SignIn />} />
                             <Route path="/welcome" element={<Welcome />} />
