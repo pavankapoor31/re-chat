@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import app, { db } from '../../server/firebaseConfig'
 import { getDatabase, ref, set, push, get, serverTimestamp, onValue } from 'firebase/database'
 import MessageBox from '../../components/MessageBox/MessageBox'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { doc, setDoc } from 'firebase/firestore'
 import useFirebaseAuth from '../../hooks/useFirebaseAuth'
 import { Button, TextField } from '@mui/material'
@@ -14,9 +14,8 @@ const MessageWrapper = () => {
     const [messages, setMessages] = useState([]);
     const [messageInput, setMessageInput] = useState([]);
     const scrollRef = useRef();
-
+    const navigate = useNavigate();
     const fetchData = async () => {
-        console.log(chatRoomId, 'chatRoomIdchatRoomIdchatRoomId')
         const dbRef = ref(db, `chatrooms/${chatRoomId}`);
         const snapshot = await get(dbRef);
         if (snapshot.exists()) {
@@ -34,7 +33,7 @@ const MessageWrapper = () => {
             )
             setMessages(messagesList)
         } else {
-            console.log(snapshot, 'snapppp2')
+            navigate('/welcome');
         }
     }
     const handleSendMessage = async () => {
@@ -60,8 +59,9 @@ const MessageWrapper = () => {
         }
     }
     useEffect(() => {
+        if(!chatRoomId) return;
         fetchData()
-    }, [])
+    }, [chatRoomId])
     useEffect(() => {
         const dbRef = ref(db, `chatrooms/${chatRoomId}/messages`);
 
@@ -77,6 +77,24 @@ const MessageWrapper = () => {
                 scrollRef.current.scrollIntoView()
             } else {
                 setMessages([]);
+            }
+        });
+
+        // Cleanup listener on unmount
+        return () => unsubscribe();
+    }, [chatRoomId]);
+
+
+    useEffect(() => {
+        if(!chatRoomId) return;
+        const dbRef = ref(db, `chatrooms/${chatRoomId}`);
+
+        // Listen for real-time updates
+        const unsubscribe = onValue(dbRef, (snapshot) => {
+            const snapshotVal = snapshot.exists();
+            if (snapshotVal) {
+            } else {
+                navigate('/welcome');
             }
         });
 
